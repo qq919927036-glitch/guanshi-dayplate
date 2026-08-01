@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://qq919927036-glitch.github.io/guanshi-dayplate/sitemap.xml
