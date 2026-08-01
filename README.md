@@ -2,6 +2,8 @@
 
 一个无依赖的中文 3D 择日页面。默认列出 2026 年 8 月 1 日（丙午年、乙未月、丁未日）的建除、值日神、星宿、冲煞、旬空孤虚与十二时辰择时表。
 
+正式站点：[https://qq919927036-glitch.github.io/guanshi-dayplate/](https://qq919927036-glitch.github.io/guanshi-dayplate/)
+
 ## 预览
 
 直接在浏览器打开 `index.html`，或在本目录运行：
@@ -22,4 +24,4 @@ python3 -m http.server 4173
 
 ## 公开与收录
 
-网站已加入面向搜索引擎的元数据、结构化数据和 `robots.txt`。公开部署、生成最终 `sitemap.xml` 和提交 Google Search Console 的步骤见 [DEPLOYMENT.md](DEPLOYMENT.md)。
+网站已加入面向搜索引擎的元数据、结构化数据、`robots.txt` 与 `sitemap.xml`，并通过 GitHub Pages 公开上线。Google Search Console 的验证与提交步骤见 [DEPLOYMENT.md](DEPLOYMENT.md)。
