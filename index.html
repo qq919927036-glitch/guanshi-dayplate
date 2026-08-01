@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="观时：2026年8月1日丁未日的择日、择时、方位、建除、星宿与十二时辰实盘。" />
+    <meta name="description" content="观时：按日期查询的择日、择时、建除、黄黑道、二十八星宿、冲煞、方位与行动参考。" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1" />
-    <meta name="keywords" content="择日,择时,黄道吉日,建除,二十八星宿,丁未日,玄武,青龙,天德,玉堂,孤虚,冲煞" />
+    <meta name="keywords" content="择日,择时,黄道吉日,建除,二十八星宿,冲煞,黄道黑道,太阳时,太阴时,方位" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content="观时" />
     <meta property="og:url" content="https://qq919927036-glitch.github.io/guanshi-dayplate/" />
-    <meta property="og:title" content="观时｜2026年8月1日丁未日实盘" />
-    <meta property="og:description" content="丙午年乙未月丁未日：建除、星宿、冲煞、孤虚与十二时辰择时实盘。" />
+    <meta property="og:title" content="观时｜每日择日与择时" />
+    <meta property="og:description" content="按日期读取日课：建除、黄黑道、星宿、冲煞、方位与十二时辰。" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="观时｜2026年8月1日丁未日实盘" />
-    <meta name="twitter:description" content="丙午年乙未月丁未日：建除、星宿、冲煞、孤虚与十二时辰择时实盘。" />
-    <title>观时｜2026年8月1日丁未日实盘</title>
+    <meta name="twitter:title" content="观时｜每日择日与择时" />
+    <meta name="twitter:description" content="按日期读取日课：建除、黄黑道、星宿、冲煞、方位与十二时辰。" />
+    <title>观时｜每日择日与择时</title>
     <link rel="canonical" href="https://qq919927036-glitch.github.io/guanshi-dayplate/" />
     <link rel="stylesheet" href="styles.css" />
     <script type="application/ld+json">
@@ -24,7 +24,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "观时",
-        "description": "2026年8月1日丁未日的择日、择时、方位、建除、星宿与十二时辰实盘。",
+        "description": "按日期查询的择日、择时、建除、黄黑道、二十八星宿、冲煞、方位与行动参考。",
         "applicationCategory": "ReferenceApplication",
         "operatingSystem": "Web",
         "url": "https://qq919927036-glitch.github.io/guanshi-dayplate/",
@@ -34,128 +34,163 @@
         "dateModified": "2026-08-01"
       }
     </script>
+    <!-- Pinned official lunar-javascript browser build; calculations run locally in the visitor's browser. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.7.5/lunar.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="script.js"></script>
   </head>
   <body>
-    <div class="starfield" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="star-map" aria-hidden="true"></div>
+
     <header class="site-header shell">
       <a class="brand" href="#top" aria-label="观时日课首页"><span class="brand-mark">观</span><span>观时</span></a>
-      <p class="header-status"><i></i>2026 · 08 · 01 · 丁未日实盘</p>
-      <a class="header-link" href="#timing">择时表 <span aria-hidden="true">↘</span></a>
+      <p class="header-status"><i></i><span id="header-date">日课载入中</span></p>
+      <a class="header-link" href="#timing">择时台 <span aria-hidden="true">↘</span></a>
     </header>
 
     <main id="top">
-      <section class="hero shell">
+      <section class="hero shell" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="eyebrow"><span></span>丙午年 · 乙未月 · 丁未日</p>
-          <h1>八月初一，<br /><em>丁未日。</em></h1>
-          <p class="hero-summary">农历六月十九，大暑二候，未月。日值玄武，黑道日；建除为建日；二十八宿为女土蝠。</p>
-          <div class="direct-verdict"><span>日课直断</span><p>玄武黑道，女土蝠凶宿。建日可取立事、拜访、上官赴任；不取动土、破土、掘井、安葬。修造与出行须再过星宿与时辰。</p></div>
+          <p class="eyebrow"><span></span>每日日课 · DATUM 01</p>
+          <h1 id="page-title"><span id="hero-month">八月</span><br /><em id="hero-day">初一</em></h1>
+          <p id="hero-summary" class="hero-summary">正在以本地历法引擎核定干支、月令与日课。</p>
+          <p class="hero-rule">先取黄道与吉时，再看建除、星宿、冲煞；太阳太阴只作加分，不作替代。</p>
         </div>
 
-        <section class="time-console" aria-labelledby="time-console-title">
-          <div class="console-title"><span class="pulse-dot"></span><p id="time-console-title">择时校准</p><span>北京时间</span></div>
-          <div class="input-row">
-            <label>日课日期<input id="date-input" type="date" value="2026-08-01" required /></label>
-            <label>用事时刻<input id="time-input" type="time" value="09:30" required /></label>
+        <section class="date-console" aria-labelledby="date-console-title">
+          <div class="console-topline"><span class="pulse-dot"></span><p id="date-console-title">日课校准</p><span>北京时间</span></div>
+          <div class="date-controls">
+            <button id="previous-day" class="icon-button" type="button" aria-label="前一天">←</button>
+            <label class="date-field">择日日期<input id="date-input" type="date" value="2026-08-01" required /></label>
+            <button id="next-day" class="icon-button" type="button" aria-label="后一天">→</button>
           </div>
-          <button id="calculate-button" class="calculate-button" type="button">核定时柱 <span aria-hidden="true">✦</span></button>
-          <p id="date-state" class="console-note">本页已核定 2026 年 8 月 1 日丁未日通胜；择时按此日十二时辰显示。</p>
+          <div id="date-strip" class="date-strip" aria-label="相邻日期速览"></div>
+          <div class="time-controls">
+            <label>用事时刻<input id="time-input" type="time" value="09:30" required /></label>
+            <button id="today-button" type="button">回到今日</button>
+          </div>
+          <p id="engine-state" class="console-note">核验中…</p>
         </section>
       </section>
 
-      <section class="dashboard shell" aria-label="丁未日总盘">
-        <div class="dial-section">
-          <div id="dial-scene" class="dial-scene" aria-label="三维丁未日时间罗盘" role="img">
-            <div class="orbital-dial">
-              <div class="orbit orbit-outer"><span>子</span><span>卯</span><span>午</span><span>酉</span></div>
-              <div class="orbit orbit-middle"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="orbit orbit-inner"></div>
-              <div class="dial-core"><p>日柱</p><strong>丁未</strong><b>玄武 · 黑道</b></div>
-              <div id="dial-needle" class="dial-needle" aria-hidden="true"></div>
-              <div class="dial-glow" aria-hidden="true"></div>
-            </div>
+      <section class="stage shell" aria-label="当日日课总览">
+        <section id="dial-scene" class="dial-scene" aria-label="三维日课罗盘" role="img">
+          <div class="compass-shadow"></div>
+          <div class="orbital-dial">
+            <div class="compass-ring ring-outer"><span>子</span><span>卯</span><span>午</span><span>酉</span></div>
+            <div class="compass-ring ring-ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="compass-ring ring-orbit"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="dial-core"><p>日柱</p><strong id="dial-pillar">丁未</strong><b id="dial-deity">玄武 · 黑道</b></div>
+            <div id="dial-needle" class="dial-needle" aria-hidden="true"></div>
           </div>
-          <div class="dial-caption"><span class="live-indicator"></span><p id="selected-time-caption">巳时 · 乙巳 · 玉堂 · 吉</p><span>丁未日</span></div>
-        </div>
+          <div class="dial-caption"><span class="live-indicator"></span><p id="selected-time-caption">巳时 · 乙巳 · 玉堂 · 吉</p><span id="dial-lunar">农历六月十九</span></div>
+        </section>
 
-        <div class="result-panel">
-          <div class="result-heading"><p class="eyebrow"><span></span>日课总断</p><p class="result-note">日支为主，时支为辅</p></div>
-          <div class="result-main">
-            <div><span>值日神</span><strong>玄武</strong></div>
-            <p>玄武值日为黑道。建除取建日；女土蝠按课程口径为凶宿。日课不作婚嫁、安葬、动土、破土、掘井的首选。</p>
-            <span class="fortune-badge">黑道 · 凶</span>
+        <section class="judgement-panel" aria-labelledby="judgement-title">
+          <div class="panel-heading"><p class="eyebrow"><span></span>日课总断</p><p id="system-count" class="result-note">三家合参</p></div>
+          <div class="judgement-lead">
+            <div><span>值日神</span><strong id="day-deity">玄武</strong></div>
+            <span id="day-badge" class="fortune-badge">黑道 · 凶</span>
+            <p id="direct-verdict">正在核定日课结论。</p>
           </div>
-          <div class="technical-list">
-            <div><span>建除</span><b>建日</b><p>宜立事、拜访、上官赴任；动土慎用。</p></div>
-            <div><span>星宿</span><b>女土蝠</b><p>凶宿；不取造作、埋葬、开门放水。</p></div>
-            <div><span>日名</span><b>太阳日</b><p>农历六月十九；太阴为望后渐亏。</p></div>
-            <div><span>纳音</span><b>天河水</b><p>日空亡：寅、卯。</p></div>
+          <div class="signal-grid">
+            <article><span>建除</span><strong id="zhi-xing">建日</strong><p id="zhi-xing-note">依月令起建，逐日轮转。</p></article>
+            <article><span>二十八宿</span><strong id="xiu">女土蝠</strong><p id="xiu-note">演禽宜忌作复核。</p></article>
+            <article><span>日纳音</span><strong id="na-yin">天河水</strong><p id="xun-kong">甲辰旬 · 空亡寅卯</p></article>
+            <article><span>乌兔择时</span><strong id="wutu-time">太阳申 · 太阴寅亥</strong><p>太阳、太阴时只作保底加分。</p></article>
           </div>
+        </section>
+      </section>
+
+      <section class="data-ribbon shell" aria-label="日课基本资料">
+        <div><span>四柱</span><strong id="four-pillars">丙午年 · 乙未月 · 丁未日</strong></div>
+        <div><span>冲煞</span><strong id="day-clash">冲牛 · 煞西</strong></div>
+        <div><span>节气</span><strong id="solar-term">大暑</strong></div>
+        <div><span>胎神</span><strong id="tai-position">仓库厕房内东</strong></div>
+      </section>
+
+      <section class="daily-sheet shell" aria-labelledby="daily-title">
+        <div class="section-intro">
+          <p class="eyebrow"><span></span>今日行动参考</p>
+          <h2 id="daily-title">该做什么，<br /><em>直接列明。</em></h2>
+          <p>日课用于重要用事的初筛。婚嫁、入宅、开工、安葬等仍须叠加当事人生肖、坐向与具体事项，不以单一日课代替完整择日。</p>
+        </div>
+        <div class="action-board">
+          <article class="action-card is-yi">
+            <div class="card-label"><span>01</span><p>通胜所宜</p><b>宜</b></div>
+            <div id="yi-tags" class="tag-group"></div>
+            <p class="card-note">列示前六项，用事前再看日神、冲煞与时神。</p>
+          </article>
+          <article class="action-card is-ji">
+            <div class="card-label"><span>02</span><p>通胜所忌</p><b>忌</b></div>
+            <div id="ji-tags" class="tag-group"></div>
+            <p class="card-note">列示前六项。犯冲、刑、破、害者，优先避开。</p>
+          </article>
+          <article class="action-card direct-card">
+            <div class="card-label"><span>03</span><p>方位与衣色</p><b>用</b></div>
+            <dl class="direction-list">
+              <div><dt>财神</dt><dd id="wealth-direction">西南</dd></div>
+              <div><dt>喜神</dt><dd id="joy-direction">正南</dd></div>
+              <div><dt>阳贵</dt><dd id="yang-gui-direction">西北</dd></div>
+              <div><dt>日煞</dt><dd id="sha-direction">正西</dd></div>
+            </dl>
+            <div class="color-recommendation"><span class="swatch"></span><p><b id="wear-colors">红、黄为主</b><span id="color-note">按日干五行取色，仅作日用参考。</span></p></div>
+          </article>
+          <article class="action-card direct-card">
+            <div class="card-label"><span>04</span><p>吉神与凶煞</p><b>参</b></div>
+            <p id="spirit-copy" class="spirit-copy">吉神、凶煞载入中。</p>
+            <div id="day-guidance" class="day-guidance"></div>
+          </article>
         </div>
       </section>
 
-      <section class="day-sheet shell" aria-labelledby="sheet-title">
-        <div class="sheet-heading">
-          <p class="eyebrow"><span></span>日课分项</p>
-          <h2 id="sheet-title">吉凶、宜忌、<br /><em>冲煞直接看。</em></h2>
-          <p>此盘按丙午年乙未月丁未日列示。择日先看日支未，再审用事时支；冲为首忌，刑次之，破害再议。</p>
-        </div>
-        <div class="sheet-grid">
-          <article class="sheet-card is-alert">
-            <div class="card-heading"><span>01</span><p>宜忌</p><b aria-hidden="true">宜</b></div>
-            <div class="tag-group positive"><span>祭祀</span><span>修造*</span><span>出行*</span><span>盖屋</span><span>竖柱</span></div>
-            <div class="tag-group negative"><span>动土</span><span>破土</span><span>掘井</span><span>安葬</span></div>
-            <p class="card-note">*通胜列宜；课程以女土蝠为凶宿，修造、出行不作直接结论，必须复核择时。</p>
-          </article>
-          <article class="sheet-card">
-            <div class="card-heading"><span>02</span><p>冲煞</p><b aria-hidden="true">冲</b></div>
-            <h3>冲牛 <em>煞西</em></h3>
-            <p class="detail-copy">丁未日冲辛丑牛。属牛者避用此日；西方为煞方，不取为用事主向。</p>
-            <div class="minor-rule">未日三合：亥、卯、未　·　六合：午、未</div>
-          </article>
-          <article class="sheet-card">
-            <div class="card-heading"><span>03</span><p>诸神方位</p><b aria-hidden="true">方</b></div>
-            <dl class="direction-list"><div><dt>财神</dt><dd>西南</dd></div><div><dt>福神</dt><dd>东南</dd></div><div><dt>喜神</dt><dd>正南</dd></div><div><dt>阳贵</dt><dd>西北</dd></div><div><dt>阴贵</dt><dd>正西</dd></div></dl>
-          </article>
-          <article class="sheet-card">
-            <div class="card-heading"><span>04</span><p>五行用色</p><b aria-hidden="true">色</b></div>
-            <div class="color-line"><span class="red"></span><span class="yellow"></span><span class="green"></span><span class="white"></span><span class="black"></span></div>
-            <h3>红、黄为主</h3>
-            <p class="detail-copy">丁属阴火，未属阴土；日用可取红、黄，青绿为辅。此项仅按五行颜色对应取用。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="void-section">
-        <div class="shell void-grid">
-          <div><p class="eyebrow"><span></span>旬空 · 孤虚</p><h2>甲辰旬，<br />空亡寅卯。</h2></div>
-          <div class="void-content">
-            <p><b>丁未日属甲辰旬。</b>旬空为寅、卯。丁为阴日，取卯为阴孤、酉为阴虚。</p>
-            <div class="void-route"><span>背卯</span><i>→</i><strong>击酉</strong></div>
-            <p class="void-note">背孤击虚只用于竞争、谈判、博弈、签约、销售、比赛、讨价还价；不用于合作。以桌位或行进路线取背卯面酉。</p>
+      <section class="route-section" aria-labelledby="route-title">
+        <div class="shell route-grid">
+          <div><p class="eyebrow"><span></span>冲煞 · 旬空 · 孤虚</p><h2 id="route-title">方位不对，<br />日时也要复核。</h2></div>
+          <div class="route-content">
+            <p id="route-lead"><b>日冲与日煞为先避项。</b>正在核定本日冲煞与旬空。</p>
+            <div class="route-track"><span id="void-left">旬空</span><i>→</i><strong id="void-right">空亡</strong></div>
+            <p id="route-note" class="route-note">背孤击虚只取竞争、谈判、销售、博弈等场景；合作不套用此法。</p>
           </div>
         </div>
       </section>
 
       <section id="timing" class="timing shell" aria-labelledby="timing-title">
-        <div class="timing-heading"><p class="eyebrow"><span></span>择时</p><h2 id="timing-title">十二时辰，<br /><em>吉凶分开用。</em></h2><p>点击任何一行，直接将其设为用事时刻。黄道六神：青龙、明堂、金匮、天德、玉堂、司命；其余六神为黑道。</p></div>
-        <div id="hour-grid" class="hour-grid" aria-label="丁未日十二时辰择时表"></div>
+        <div class="section-intro timing-intro">
+          <p class="eyebrow"><span></span>择时台</p>
+          <h2 id="timing-title">十二时辰，<br /><em>先取黄道。</em></h2>
+          <p>选择时段后，罗盘、时柱、时神、时冲与时宜同步更新。日子不理想时，至少保住黄道吉时；但吉时不能抵掉重要冲煞。</p>
+        </div>
+        <div id="hour-grid" class="hour-grid" aria-label="十二时辰择时表"></div>
       </section>
 
-      <section class="selected-time shell" aria-label="当前选中时辰的详细裁断">
+      <section class="selected-time shell" aria-label="当前用事时辰详细裁断">
         <div class="selected-label"><span>当前用时</span><i></i><p id="selected-hour-name">巳时 · 09:00–10:59</p></div>
-        <div class="selected-content"><div><span>时柱</span><strong id="selected-pillar">乙巳</strong></div><div><span>时神</span><strong id="selected-deity">玉堂 · 吉</strong></div><div><span>时冲</span><strong id="selected-clash">冲猪 · 煞东</strong></div><div><span>时宜</span><strong id="selected-do">赴任、出行、修造、开业</strong></div></div>
+        <div class="selected-content">
+          <div><span>时柱</span><strong id="selected-pillar">乙巳</strong></div>
+          <div><span>时神</span><strong id="selected-deity">玉堂 · 吉</strong></div>
+          <div><span>时冲</span><strong id="selected-clash">冲猪 · 煞东</strong></div>
+          <div><span>时宜</span><strong id="selected-do">赴任、出行、修造、开业</strong></div>
+        </div>
       </section>
 
       <section class="method-section">
         <div class="shell method-grid">
-          <div><p class="eyebrow"><span></span>课程判断顺序</p><h2>不只看一个<br />“黄道吉日”。</h2></div>
-          <ol><li><span>01</span><p><b>先定日课。</b>看年、月、日、时，日支为主。</p></li><li><span>02</span><p><b>先避冲，再避刑。</b>日支不可冲当事人生肖与相关朝向。</p></li><li><span>03</span><p><b>再看建除、星宿、值日神与吉时。</b>各法不可互相替代。</p></li><li><span>04</span><p><b>日时要复核。</b>日支与时支本身也不宜相冲。</p></li></ol>
+          <div><p class="eyebrow"><span></span>日课口径</p><h2>不是“见吉就用”。</h2></div>
+          <ol>
+            <li><span>01</span><p><b>黄道与吉时优先。</b>十二神先定黄黑道，时神与日神分别复核。</p></li>
+            <li><span>02</span><p><b>冲煞先避。</b>当事人生肖、用事方位及坐向相冲，不取。</p></li>
+            <li><span>03</span><p><b>建除、星宿作第二层筛选。</b>三家都吉最好，不齐时不强凑。</p></li>
+            <li><span>04</span><p><b>太阳、太阴是加分项。</b>太阳时、太阴时可作保底，不能覆盖大凶。</p></li>
+          </ol>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer shell"><a class="brand" href="#top"><span class="brand-mark">观</span><span>观时</span></a><p>2026 年 8 月 1 日丁未日 · 通胜信息与课程口径分列呈现</p><button id="reset-button" type="button">回到巳时 <span aria-hidden="true">↻</span></button></footer>
-    <script src="script.js"></script>
+    <footer class="site-footer shell">
+      <a class="brand" href="#top"><span class="brand-mark">观</span><span>观时</span></a>
+      <p>每日数据由本地端历法引擎换算；课程判断顺序与通胜数据分层呈现。</p>
+      <button id="top-button" type="button">回到日课 <span aria-hidden="true">↟</span></button>
+    </footer>
   </body>
 </html>
