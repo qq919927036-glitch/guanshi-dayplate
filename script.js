@@ -56,6 +56,10 @@ const POSITION_ELEMENT = { 北: '水', 东北: '土', 东: '木', 东南: '木',
 const WENCHANG = { 甲: '巳', 乙: '午', 丙: '申', 丁: '酉', 戊: '申', 己: '酉', 庚: '亥', 辛: '子', 壬: '寅', 癸: '卯' };
 const SAN_SHA = { '申子辰': '南', '寅午戌': '北', '亥卯未': '西', '巳酉丑': '东' };
 const YANG_GONG = { 1: [13], 2: [11], 3: [9], 4: [7], 5: [5], 6: [3], 7: [1, 29], 8: [27], 9: [25], 10: [23], 11: [21], 12: [19] };
+const TIAN_DE = { 1: '丁', 2: '申', 3: '壬', 4: '辛', 5: '亥', 6: '甲', 7: '癸', 8: '寅', 9: '丙', 10: '乙', 11: '巳', 12: '庚' };
+const YUE_DE = { 1: '丙', 2: '甲', 3: '壬', 4: '庚', 5: '丙', 6: '甲', 7: '壬', 8: '庚', 9: '丙', 10: '甲', 11: '壬', 12: '庚' };
+const TIAN_YI = { 甲: ['丑', '未'], 戊: ['丑', '未'], 庚: ['丑', '未'], 乙: ['子', '申'], 己: ['子', '申'], 丙: ['亥', '酉'], 丁: ['亥', '酉'], 壬: ['卯', '巳'], 癸: ['卯', '巳'], 辛: ['寅', '午'] };
+const DU_TIAN = { '甲己': ['戊辰', '己巳'], '乙庚': ['戊寅', '己卯'], '丙辛': ['戊戌', '己亥'], '丁壬': ['戊申', '己酉'], '戊癸': ['戊午', '己未'] };
 
 let currentData = null;
 let selectedUseCase = '婚嫁';
@@ -106,6 +110,9 @@ function getDayData(iso) {
   const yearBranch = yearPillar.charAt(1);
   const lunarMonthNumber = Math.abs(lunar.getMonth());
   const lunarDayNumber = lunar.getDay();
+  const tianDePosition = TIAN_DE[lunarMonthNumber];
+  const yueDePosition = YUE_DE[lunarMonthNumber];
+  const duTianValues = Object.entries(DU_TIAN).find(([stems]) => stems.includes(yearPillar.charAt(0)))?.[1] || [];
   const deityLuck = lunar.getDayTianShenLuck();
   const deity = lunar.getDayTianShen();
   const officer = lunar.getZhiXing();
@@ -119,6 +126,7 @@ function getDayData(iso) {
     solarTerm: lunar.getJieQi() || (lunar.getPrevJieQi(true)?.getName() || '节气间'), yi: safeList(lunar.getDayYi()), ji: safeList(lunar.getDayJi()), jiShen: safeList(lunar.getDayJiShen()), xiongSha: safeList(lunar.getDayXiongSha()),
     dayChongDesc: lunar.getDayChongDesc(), dayChongZodiac: lunar.getDayChongShengXiao(), daySha: lunar.getDaySha(), tai: lunar.getDayPositionTai(),
     lunarMonthNumber, lunarDayNumber, yangGong: (YANG_GONG[lunarMonthNumber] || []).includes(lunarDayNumber), sanSha: annualSanSha(yearBranch),
+    tianDePosition, yueDePosition, hasTianDe: dayPillar.includes(tianDePosition), hasYueDe: dayPillar.includes(yueDePosition), hasTianYi: (TIAN_YI[dayStem] || []).includes(dayBranch), hasWenChang: WENCHANG[dayStem] === dayBranch, duTian: duTianValues.includes(dayPillar),
     lunarLabel: `农历${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`, fullPillars: `${yearPillar}年 · ${lunar.getMonthInGanZhi()}月 · ${dayPillar}日`, weekday: `星期${solar.getWeekInChinese()}`,
   };
   data.hours = BRANCHES.map((branch, index) => {
@@ -285,7 +293,9 @@ function renderUseCaseVerdict() {
   const jiText = dayAvoids.length ? `本日所忌含${dayAvoids.join('、')}。` : '';
   setText('#usecase-label', `${useCase.label} · ${dayGate} · ${currentData.officer}日`);
   const yangGongText = currentData.yangGong ? '本日为杨公忌日，重大用事不取。' : '';
-  setText('#usecase-verdict', `${yiText}${jiText}${yangGongText} ${DAY_DEITY_GUIDANCE[currentData.deity] || ''}`);
+  const duTianText = useCase.construction && currentData.duTian ? '本日犯戊己都天，动土、修造、安葬不取。' : '';
+  const specialistText = useCase.id === '签约' && currentData.hasTianYi ? '日支临天乙贵人，利见客户、求助、签约。' : useCase.id === '考试' && currentData.hasWenChang ? '日支临文昌，利考试、文书、写作与面试。' : '';
+  setText('#usecase-verdict', `${yiText}${jiText}${yangGongText}${duTianText}${specialistText} ${DAY_DEITY_GUIDANCE[currentData.deity] || ''}`);
   setText('#usecase-timing', `择时：${timeText}优先；行动落在时辰中段，并逐项复核时冲与时忌。`);
   renderProfileCheck(currentData, useCase);
   renderClothingRecommendation(currentData, useCase);
@@ -311,7 +321,7 @@ function renderCourseGates(data) {
   const yellow = isYellowDay(data);
   const sunMoon = `太阳${data.wutu.sun.join('') || '—'} · 太阴${data.wutu.moon.join('') || '—'}`;
   const filter = `建除${data.officerLuck} · 演禽${data.xiuLuck}`;
-  const warnings = [data.yangGong ? '杨公忌' : '', data.xiongSha.slice(0, 2).join('、')].filter(Boolean).join('；') || '未见课程主忌';
+  const warnings = [data.yangGong ? '杨公忌' : '', data.duTian ? '戊己都天' : '', data.xiongSha.slice(0, 2).join('、')].filter(Boolean).join('；') || '未见课程主忌';
   setText('#gate-huangdao', `${data.deity}${yellow ? '黄道' : '黑道'} · ${data.deityLuck}`);
   setText('#gate-huangdao-note', yellow ? '第一关可过；再用黄道时落到具体时刻。' : '第一关未过；大事改取黄道日，定期不改时只保黄道时。');
   setText('#gate-wutu', sunMoon);
@@ -319,7 +329,8 @@ function renderCourseGates(data) {
   setText('#gate-filter', filter);
   setText('#gate-filter-note', `${data.officer}日；${data.xiu}${data.xiuLuck}宿，按事项取舍。`);
   setText('#gate-avoid', warnings);
-  setText('#gate-avoid-note', `日冲${data.dayChongZodiac}、煞${data.daySha}；再审主事生肖与主向。`);
+  const blessings = [data.hasTianDe ? '天德' : '', data.hasYueDe ? '月德' : '', data.hasTianYi ? '天乙' : '', data.hasWenChang ? '文昌' : ''].filter(Boolean).join('、');
+  setText('#gate-avoid-note', `日冲${data.dayChongZodiac}、煞${data.daySha}；${blessings ? `吉神见${blessings}。` : '再审主事生肖与主向。'}`);
 }
 
 function renderDay(data) {
@@ -341,8 +352,10 @@ function renderDay(data) {
   renderTags(document.querySelector('#yi-tags'), data.yi, '当日无宜项'); renderTags(document.querySelector('#ji-tags'), data.ji, '当日无忌项');
   setText('#wealth-direction', data.wealth); setText('#joy-direction', data.joy); setText('#yang-gui-direction', data.yangGui); setText('#yin-gui-direction', data.yinGui); setText('#fu-direction', data.fu); setText('#sha-direction', `煞${data.daySha}`);
   setText('#spirit-copy', `吉神：${data.jiShen.slice(0, 6).join('、') || '未列'}。凶煞：${data.xiongSha.slice(0, 6).join('、') || '未列'}。`);
-  setText('#day-shensha', data.yangGong ? '杨公忌日' : data.xiongSha.slice(0, 2).join('、') || '未列');
-  setText('#route-lead', `日冲${data.dayChongDesc}，煞${data.daySha}方。属${data.dayChongZodiac}者不取此日为主用事日；用事主向不取${data.daySha}方。`);
+  const dayBlessings = [data.hasTianDe ? '天德' : '', data.hasYueDe ? '月德' : '', data.hasTianYi ? '天乙贵人' : '', data.hasWenChang ? '文昌' : ''].filter(Boolean).join('、');
+  setText('#day-shensha', data.yangGong ? '杨公忌日' : data.duTian ? '戊己都天' : dayBlessings || data.xiongSha.slice(0, 2).join('、') || '未列');
+  setText('#spirit-copy', `${dayBlessings ? `吉神：${dayBlessings}。` : ''}凶煞：${data.xiongSha.slice(0, 6).join('、') || '未列'}。`);
+  setText('#route-lead', `日冲${data.dayChongDesc}，煞${data.daySha}方。属${data.dayChongZodiac}者不取此日为主用事日；用事主向不取${data.daySha}方。${data.sanSha !== '—' ? ` ${data.yearPillar}年三煞在${data.sanSha}。` : ''}`);
   const isYangDay = '甲丙戊庚壬'.includes(data.dayStem);
   const solo = [...data.xunKong].find((branch) => '子寅辰午申戌'.includes(branch) === isYangDay) || data.xunKong.charAt(0);
   const virtual = OPPOSITE_BRANCH[solo];
